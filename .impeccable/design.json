@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-21T18:21:20Z",
+  "title": "Design System: DevDay Studio",
+  "extensions": {
+    "colorMeta": {
+      "action": {
+        "role": "primary",
+        "displayName": "Verde de acción"
+      },
+      "agent-green": {
+        "role": "secondary",
+        "displayName": "Verde de los agentes"
+      },
+      "agent-purple": {
+        "role": "secondary",
+        "displayName": "Violeta de los agentes"
+      },
+      "agent-blue": {
+        "role": "secondary",
+        "displayName": "Azul de los agentes"
+      },
+      "agent-orange": {
+        "role": "secondary",
+        "displayName": "Naranja de los agentes"
+      },
+      "canvas-surround": {
+        "role": "neutral",
+        "displayName": "Entorno del lienzo"
+      },
+      "supporting-text": {
+        "role": "neutral",
+        "displayName": "Texto de ayuda"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Título de la pieza",
+        "purpose": "Community y speaker: tamaño inicial de 150px, 180px en horizontal; el renderizador ajusta al ancho."
+      },
+      "headline": {
+        "displayName": "Título del inspector",
+        "purpose": "Jerarquía principal de interfaz."
+      },
+      "wordmark": {
+        "displayName": "Marca OpenAI",
+        "purpose": "Marca del lienzo con el archivo de fuente local."
+      }
+    },
+    "shadows": [
+      {
+        "name": "artwork",
+        "value": "0 12px 38px #1b2b1621",
+        "purpose": "Separar la pieza de su entorno."
+      },
+      {
+        "name": "selected-format",
+        "value": "0 2px 5px #253b1c0b",
+        "purpose": "Segmento de formato seleccionado."
+      },
+      {
+        "name": "menu",
+        "value": "0 10px 35px #172c1921",
+        "purpose": "Menú flotante."
+      },
+      {
+        "name": "toast",
+        "value": "0 6px 24px #183d2326",
+        "purpose": "Aviso temporal."
+      },
+      {
+        "name": "confirmation",
+        "value": "0 8px 30px #19361520",
+        "purpose": "Confirmación."
+      },
+      {
+        "name": "help",
+        "value": "0 8px 38px #183d2326",
+        "purpose": "Panel de ayuda."
+      },
+      {
+        "name": "dialog",
+        "value": "0 30px 90px #111b2030",
+        "purpose": "Diálogo de exportación."
+      }
+    ],
+    "motion": [
+      {
+        "name": "button-transition",
+        "value": "background .15s,border-color .15s,transform .15s",
+        "purpose": "Estados de botones."
+      },
+      {
+        "name": "toggle-transition",
+        "value": "transform .2s",
+        "purpose": "Cambio del interruptor."
+      },
+      {
+        "name": "agent-demo",
+        "value": "4s ease-in-out infinite",
+        "purpose": "Flotación y parpadeo de demostración."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation:none!important;transition:none!important",
+        "purpose": "Desactiva animaciones y transiciones CSS cuando prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-min",
+        "value": "1650px"
+      },
+      {
+        "name": "compact-max",
+        "value": "1150px"
+      },
+      {
+        "name": "mobile-max",
+        "value": "800px"
+      },
+      {
+        "name": "small-mobile-max",
+        "value": "420px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Acción principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción de exportación o confirmación.",
+      "html": "<button class=\"ds-primary\">Exportar</button>",
+      "css": ".ds-primary{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:var(--radius,8px);height:40px;padding:0 17px;font-family:'OpenAI Sans',sans-serif;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;transition:background .15s,border-color .15s,transform .15s;border:1px solid var(--green,#16633d);background:var(--green,#16633d);color:#fff}.ds-primary:hover{background:#104d2f;border-color:#104d2f}.ds-primary:focus-visible{outline:3px solid #66ae87;outline-offset:3px}.ds-primary:active:not(:disabled){transform:translateY(1px)}.ds-primary:disabled{cursor:not-allowed;opacity:.5}"
+    },
+    {
+      "name": "Acción secundaria",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Cancelación o reproducción de la vista previa.",
+      "html": "<button class=\"ds-secondary\">Cancelar</button>",
+      "css": ".ds-secondary{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:var(--radius,8px);height:40px;padding:0 17px;font-family:'OpenAI Sans',sans-serif;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;transition:background .15s,border-color .15s,transform .15s;background:#fff;border:1px solid #d8dfd4;color:#1d241f}.ds-secondary:hover{background:#f2f5ef}.ds-secondary:focus-visible{outline:3px solid #66ae87;outline-offset:3px}.ds-secondary:active:not(:disabled){transform:translateY(1px)}.ds-secondary:disabled{cursor:not-allowed;opacity:.5}"
+    },
+    {
+      "name": "Botón de icono",
+      "kind": "button",
+      "refersTo": "button-icon",
+      "description": "Acción auxiliar con etiqueta accesible.",
+      "html": "<button class=\"ds-icon\" aria-label=\"Cerrar\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg></button>",
+      "css": ".ds-icon{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:0;border-radius:7px;color:#687366;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}.ds-icon:hover{background:#e8ede5;color:#1b3221}.ds-icon:focus-visible{outline:3px solid #66ae87;outline-offset:3px}.ds-icon:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Etiqueta, entrada y ayuda con el contraste final de la interfaz.",
+      "html": "<label class=\"ds-field\">Ciudad<input value=\"Guayaquil\"/><small>Ciudad del evento</small></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:7px;margin:0 0 14px;font:11px 'OpenAI Sans',sans-serif;color:#5e695d}.ds-field input{height:40px;width:100%;border:1px solid #dfe4db;background:#fff;border-radius:7px;padding:0 11px;font:12px 'OpenAI Sans',sans-serif;color:#253026;transition:border-color .15s;caret-color:var(--green,#16633d);min-width:0}.ds-field input:hover{border-color:#adbca6}.ds-field input:focus{border-color:#568264}.ds-field input:focus-visible{outline:3px solid #66ae87;outline-offset:3px}.ds-field small{font-size:10px;line-height:1.5;color:#64705c}"
+    },
+    {
+      "name": "Pestañas del inspector",
+      "kind": "nav",
+      "refersTo": "tabs",
+      "description": "Selección subrayada dentro del formulario.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\" aria-label=\"Opciones de edición\"><button role=\"tab\" aria-selected=\"true\" class=\"ds-active\">Contenido</button><button role=\"tab\" aria-selected=\"false\">Diseño</button><button role=\"tab\" aria-selected=\"false\">Movimiento</button></div>",
+      "css": ".ds-tabs{display:flex;padding:0 19px;gap:4px;border-bottom:1px solid var(--border,#e2e6df)}.ds-tabs button{position:relative;display:flex;align-items:center;justify-content:center;gap:7px;flex:1;padding:14px 3px 13px;border:0;background:transparent;font:12px 'OpenAI Sans',sans-serif;color:#71786f;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}.ds-tabs button.ds-active{color:var(--green,#16633d);font-weight:600}.ds-tabs button.ds-active:after{content:'';position:absolute;bottom:-1px;height:2px;background:var(--green,#16633d);left:9px;right:9px}.ds-tabs button:hover{color:var(--green,#16633d);background:#fafcf8}.ds-tabs button:focus-visible{outline:3px solid #66ae87;outline-offset:3px}.ds-tabs button:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Selector de formato",
+      "kind": "custom",
+      "refersTo": "format-selector",
+      "description": "Segmentos de relación de aspecto con selección explícita.",
+      "html": "<div class=\"ds-formats\"><button class=\"ds-selected\" aria-pressed=\"true\">Cuadrado <small>1:1</small></button><button aria-pressed=\"false\">Historia <small>9:16</small></button></div>",
+      "css": ".ds-formats{display:flex;align-items:center;justify-content:center;gap:4px;background:#e5e9e1;border-radius:9px;padding:4px}.ds-formats button{display:flex;align-items:center;gap:7px;font:11px 'OpenAI Sans',sans-serif;border:0;padding:9px 13px;background:none;color:#69765f;border-radius:6px;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}.ds-formats small{font-size:9px;opacity:.75}.ds-formats .ds-selected{background:#fff;color:#21331e;box-shadow:0 2px 5px #253b1c0b}.ds-formats button:hover{background:#f6f8f2}.ds-formats button:focus-visible{outline:3px solid #66ae87;outline-offset:3px}.ds-formats button:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Tarjeta de plantilla",
+      "kind": "card",
+      "refersTo": "template-card",
+      "description": "Miniatura y selección de la plantilla de la pieza.",
+      "html": "<button class=\"ds-template\"><div class=\"ds-miniature\"><span class=\"ds-mini-brand\">OpenAI</span><b>#DevDay<br/>Community</b><i class=\"ds-dot\"></i></div><span class=\"ds-caption\">Community</span></button>",
+      "css": ".ds-template{background:#f4f8f0;border:1px solid var(--green,#16633d);padding:5px;border-radius:8px;text-align:left;font-family:'OpenAI Sans',sans-serif;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}.ds-miniature{height:90px;position:relative;background:#171a13;color:#f8faf3;overflow:hidden;padding:8px;border-radius:4px}.ds-mini-brand{font-size:5px;display:block;margin-bottom:10px}.ds-miniature b{font-size:11px;line-height:1;letter-spacing:-.5px;display:block;position:relative;z-index:2}.ds-dot{position:absolute;border-radius:50%;width:30px;height:30px;background:#9146ff;right:7px;bottom:13px}.ds-caption{display:flex;font-size:9px;margin:8px 3px 3px;color:var(--green,#16633d)}.ds-template:focus-visible{outline:3px solid #66ae87;outline-offset:3px}.ds-template:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Carga de fotografía",
+      "kind": "button",
+      "refersTo": "photo-uploader",
+      "description": "Superficie con borde discontinuo para elegir una fotografía.",
+      "html": "<button class=\"ds-upload\"><span class=\"ds-upload-icon\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M12 16V4m-5 5 5-5 5 5M4 16v4h16v-4\"/></svg></span><span class=\"ds-upload-copy\"><b>Subir fotografía</b><small>JPG, PNG o WebP</small></span></button>",
+      "css": ".ds-upload{display:flex;align-items:center;gap:12px;border:1px dashed #c9d4c2;background:#f8faf6;border-radius:9px;min-height:84px;padding:13px 12px;text-align:left;width:100%;font-family:'OpenAI Sans',sans-serif;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}.ds-upload:hover{border-color:#59845a;background:#f0f6eb}.ds-upload-copy{display:flex;flex-direction:column;gap:5px;flex:1}.ds-upload b{font-size:12px;color:#354631;font-weight:600}.ds-upload small{font-size:10px;color:#64705c}.ds-upload-icon{color:#6c815c;display:flex;align-items:center;justify-content:center;background:#eaf0e2;width:40px;height:40px;border-radius:8px}.ds-upload:focus-visible{outline:3px solid #66ae87;outline-offset:3px}.ds-upload:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Insignia de la pieza",
+      "kind": "chip",
+      "refersTo": "artwork-badge",
+      "description": "Traducción HTML de la insignia dibujada en canvas, con el acento inicial; es contenido, no una acción.",
+      "html": "<span class=\"ds-badge\">COMMUNITY EVENT</span>",
+      "css": ".ds-badge{display:inline-block;height:48px;padding:12px 20px 0;border-radius:24px;background:#00b647;color:#10140e;font:700 23px 'OpenAI Sans',sans-serif}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Los assets digitales DevDay en el centro",
+    "overview": "La identidad procede de los assets digitales DDE y las referencias de speakers suministradas. OpenAI Sans, los agentes circulares con expresiones y los colores saturados pertenecen a las piezas; el entorno de edición usa blancos y verdes suaves para mantener legibles los controles.\n\nLa densidad es compacta y la jerarquía depende de la tipografía, la separación y los estados seleccionados. Las superficies de formulario son planas; el lienzo tiene la profundidad necesaria para distinguir la pieza de su entorno.",
+    "keyCharacteristics": [
+      "OpenAI Sans local y wordmark propio.",
+      "Entorno claro, acciones verdes y piezas con tema claro u oscuro.",
+      "Agentes circulares expresivos como firma visual.",
+      "Controles compactos, selección visible y foco de teclado.",
+      "Composiciones propias para cuatro relaciones de aspecto."
+    ],
+    "rules": [
+      {
+        "name": "The Editorial Contrast Rule",
+        "body": "El titular editorial pasa por readableAccent: conserva el acento cuando alcanza 3:1 contra el fondo y, si no, acerca sus canales RGB al negro o al blanco hasta alcanzar ese contraste. El umbral corresponde a ese titular grande; no es una garantía general para textos pequeños ni se aplica automáticamente a insignias, agentes o fotografías.",
+        "section": "colors"
+      },
+      {
+        "name": "The Shared Typography Rule",
+        "body": "Vista previa y exportaciones usan las mismas fuentes locales y el mismo renderizador; las dimensiones tipográficas de la pieza se expresan en coordenadas del formato de salida, no en píxeles CSS de la vista previa.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do mantener las fuentes locales y los assets digitales como autoridad visual.",
+      "Do separar el verde de acción de los acentos saturados de las piezas.",
+      "Do conservar el foco visible, la selección explícita y el color final de los textos de ayuda.",
+      "Do comprobar cada composición en su propio formato y conservar la vista previa antes del formulario en móvil.",
+      "Do usar readableAccent para el titular editorial y el mismo renderizador para vista previa y descarga."
+    ],
+    "donts": [
+      "Don't sustituir las composiciones digitales por las de impresión.",
+      "Don't recortar el formato cuadrado para simular historia, retrato u horizontal.",
+      "Don't atribuir el ajuste de contraste editorial a todos los elementos del lienzo.",
+      "Don't añadir navegación ficticia ni controles que no tengan una acción.",
+      "Don't activar automáticamente la reproducción cuando el navegador solicita movimiento reducido."
+    ]
+  }
+}
