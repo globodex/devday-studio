@@ -1,101 +1,106 @@
 # DevDay Studio
 
-Editor web de promociones DevDay Community, construido con React, TypeScript strict y Vite. Sigue los assets digitales DDE y las referencias de publicaciones de speakers proporcionadas.
+[English](README.md) · [Español](README.es.md) · [Try the live app](https://devday-community-studio-ec.israelgo93.chatgpt.site/)
 
-## Iniciar
+[![CI](https://github.com/globodex/devday-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/globodex/devday-studio/actions/workflows/ci.yml)
+[![Code license: MIT](https://img.shields.io/badge/code_license-MIT-green.svg)](LICENSE)
 
-Requiere Node.js 22 o superior y npm.
+![DevDay Studio — flyers, GIFs and videos with colorful community agents](public/assets/devday-studio-social-v1.png)
 
-```powershell
-npm install
+Create event flyers, social posts, stories and animated announcements from a live form. Built for DevDay communities, with editable events, expressive agents and English/Spanish interfaces.
+
+A community project maintained under **globodex**, not an official OpenAI product.
+
+## What you can make
+
+- Create, edit and delete events; start from the included Ecuador community presets.
+- Choose Community, Speaker or Editorial templates, dark/light backgrounds, colors and a circular photo.
+- Design square posts (1080 × 1080), portraits (1080 × 1350), stories (1080 × 1920) and landscape banners (1920 × 1080).
+- Animate agents with orbit, bounce, waves, float or expressions; use a still frame when needed.
+- Download PNG, JPG, animated GIF or video, and back up editable designs/events as JSON.
+- Switch the interface and the artwork language independently between English and Spanish.
+- Use native ChatGPT sign-in/sign-out on the hosted Sites deployment.
+
+## Run locally
+
+Requires **Node.js 22 or newer**, npm and a current browser. You do not need an API key, a database or a ChatGPT account for local editor development.
+
+~~~sh
+git clone https://github.com/globodex/devday-studio.git
+cd devday-studio
+npm ci
 npm run dev
-```
+~~~
 
-```powershell
+Open the local URL printed by Vite (normally http://127.0.0.1:5173).
+
+~~~sh
 npm test
 npm run build
 npm run preview:auth -- --mock-auth
-```
+~~~
 
-`build` ejecuta TypeScript y Vite, e integra los recursos en `dist/server/index.js`, un Worker ESM de Sites. La autenticación está gestionada por Sites; no necesita API keys, Supabase ni una base de datos. `npm run dev` sirve el editor sin sesión para desarrollo. `preview:auth -- --mock-auth` prueba el Worker compilado con identidad simulada únicamente en loopback. El simulador no forma parte del artefacto publicado.
+The last command opens a loopback-only simulation of the hosted login flow at http://127.0.0.1:4173. It uses a fake local identity, not real ChatGPT authentication.
 
-## Uso
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Edit the React app with live reload and no authentication gate. |
+| `npm test` | Run the 22 domain, persistence, authentication and social metadata checks. |
+| `npm run build` | Check TypeScript, build Vite assets and package the Sites Worker. |
+| `npm run preview` | Preview the static Vite build; no hosted authentication. |
+| `npm run preview:auth` | Preview the built Worker's public welcome page and access gate. |
+| `npm run preview:auth -- --mock-auth` | Simulate sign-in/sign-out locally. |
 
-1. En **Tus eventos** selecciona uno existente, usa **Nuevo evento** o **Editar evento**. Guarda nombre, ciudad, fecha, horario, lugar, enlace y notas internas. Puedes eliminarlo con confirmación; la pieza actual se conserva. Si cambias datos directamente en el diseño, usa **Guardar datos en el evento** para actualizar la lista.
-2. En Diseño elige Community, Speaker o Editorial, el fondo claro/oscuro y el color de acento.
-3. Añade una foto JPG, PNG o WebP (hasta 20 MB). Ajusta zoom y posición dentro del recorte circular.
-4. Selecciona Cuadrado (1080 × 1080), Retrato (1080 × 1350), Historia (1080 × 1920) u Horizontal (1920 × 1080).
-5. En Animación elige órbita, rebote, ondas, flotación, expresiones o composición estática. Ajusta duración entre 2 y 12 segundos. Pausa o mueve la línea de tiempo para elegir el fotograma de una imagen fija.
-6. Exporta la pieza. Desde el menú de tres puntos puedes guardar o abrir un archivo JSON editable con **el diseño y toda la lista de eventos**, o empezar de nuevo sin borrar tus eventos. Los archivos anteriores que solo incluyen el diseño siguen funcionando.
-7. Cambia la interfaz entre español e inglés con **ES/EN**, arriba a la derecha. En **Diseño → Idioma de la promoción** elige el idioma de fechas y textos automáticos de la pieza. Los textos que escribiste se conservan; puedes traducirlos en Contenido. La primera visita toma el idioma del navegador y después recuerda tu elección.
+## Create your first promotion
 
-## Exportaciones
+1. Select a preset or add an event in **Your events**.
+2. Pick a template, background and output format.
+3. Edit the title, city, date, venue and speaker details; optionally upload a photo.
+4. Choose the animation and duration. Pause or scrub to select a still frame.
+5. Export an image, GIF or video. Save a JSON backup to continue in another browser.
 
-- PNG: resolución completa, sin pérdida.
-- JPG: resolución completa y calidad 95 %.
-- GIF: lado mayor de 720 px, 12 fotogramas por segundo, paleta de 256 colores por fotograma y bucle infinito. La codificación corre en un Web Worker para mantener la interfaz disponible. Los tiempos GIF alternan intervalos de 80/90 ms para conservar la duración total.
-- Video: resolución completa, captura de 30 fps y objetivo de 8 Mbps. Se ofrece MP4/H.264 si MediaRecorder lo admite; de lo contrario, WebM/VP9 o VP8. La duración y tasa efectiva dependen del navegador y del rendimiento del dispositivo. Mantén la pestaña visible durante la grabación. No lleva audio.
+The hosted app requires a ChatGPT account to enter the editor. **Account → Sign out** leaves the Site. It does not sign you out of every ChatGPT service.
 
-La misma función Canvas dibuja la vista previa y todos los fotogramas exportados. La descarga incluye un ciclo de animación y puede cancelarse. Si un navegador no permite video, la opción se desactiva y se puede usar GIF.
+## Export and storage limits
 
-## Datos y privacidad
+| Output | Behavior |
+| --- | --- |
+| PNG / JPG | Full selected canvas size; JPG uses 95% quality. |
+| GIF | Up to 720 px on the longest edge, 12 fps, looping, encoded in a Web Worker. |
+| Video | Full canvas size, target 30 fps / 8 Mbps, no audio. MP4 when supported, otherwise WebM. Keep the tab visible while recording. |
+| JSON | Editable design and the complete local event list. Photos can be included. |
 
-El contenido se guarda con debounce de 450 ms en `localStorage`: las claves `devday-studio:design:v1` y `devday-studio:events:v1` llevan el identificador de la cuenta en el Site; `devday-studio:locale:v1` conserva el idioma del navegador. El borrador anterior se migra una sola vez a la primera cuenta que inicia sesión en ese navegador. Otras cuentas comienzan con sus propias claves. Esto no es almacenamiento en la nube ni cifrado del almacenamiento local. Los eventos validan fecha real, horario de fin posterior al inicio y enlaces HTTP/HTTPS. Las horas siguen siendo de Ecuador, UTC−5. Las fotos se redimensionan en el navegador a un máximo de 1600 px y se incorporan al borrador. No se envían a un servidor. El borrador es específico del navegador y origen; no se sincroniza entre dispositivos. Si no hay espacio, la interfaz avisa y permite guardar un archivo editable.
+Designs and uploaded photos stay in **this browser's localStorage**. Hosted drafts use separate keys per account. There is no cloud sync, shared event database or upload service. Local storage is not encrypted; JSON backups may contain your photos and event details.
 
-Los archivos importados se validan y los valores numéricos se acotan. Los enlaces externos solo admiten HTTP/HTTPS. Se respetan las preferencias de movimiento reducido para la reproducción inicial. No hay telemetría.
+The example events are editable snapshots, not a live Luma integration. They use Ecuador time (UTC−5). The Manta preset has conflicting source dates and should be confirmed by its organizer. See the [usage guide](docs/USAGE.es.md).
 
-## Eventos precargados
+## Architecture and deployment
 
-Datos principales de Luma consultados el 21 de octubre de 2026, hora de Ecuador (UTC−5):
+React 19 + TypeScript strict + Vite 6 power the editor. Canvas 2D renders both previews and exports; `gifenc` handles GIF encoding and MediaRecorder handles video.
 
-| Ciudad | Fecha | Horario | Fuente |
-| --- | --- | --- | --- |
-| Guayaquil | 24 octubre 2026 | 10:00–12:00 | https://luma.com/kqtwlegj |
-| Manta | 7 noviembre 2026 | 11:00–13:00 | https://luma.com/kbp80p3l |
-| Machala | 11 noviembre 2026 | 10:00–12:00 | https://luma.com/d6x6ojiv |
-| Quito | 26 noviembre 2026 | 10:00–12:00 | https://luma.com/z8wr54j3 |
+A Worker serves the public welcome page and gates the editor using identity supplied by **Sites**. The built artifact is `dist/server/index.js`; visual assets are embedded in it.
 
-Manta tiene datos contradictorios: la descripción menciona 24 de octubre a las 10:00. La aplicación utiliza el horario principal estructurado y muestra una advertencia para confirmarlo. Los eventos son presets editables, no una sincronización en vivo. Las direcciones privadas no se infieren: se muestra “Ubicación al registrarte”. Quito sí tiene una sede pública, Universidad Tecnológica Indoamérica.
+**Cloning the repository does not provision ChatGPT login.** That login depends on Sites' trusted gateway. For another deployment, register your own Site and replace its identity and public URLs; for another hosting platform, implement a verified authentication boundary before using the Worker. See [Deployment](docs/DEPLOYMENT.md).
 
-## Archivos principales
+The included `.openai/hosting.json` identifies the existing demo. It is not a credential and does not grant deployment access.
 
-- `src/model.ts`: tipos, formatos, presets y validación del borrador.
-- `src/render.ts`: composición, tipografía, recorte fotográfico y agentes.
-- `src/motion.ts`: órbitas, rebotes y ondas con ciclos continuos y control de intensidad.
-- `src/EventEditor.tsx`: formulario de alta/edición de eventos; conserva cambios al alternar pestañas.
-- `src/i18n.ts`: diccionario tipado ES/EN, contexto y preferencia de idioma.
-- `scripts/check-model.mjs`: 11 pruebas del dominio, migración y continuidad de animaciones.
-- `src/Preview.tsx`: renderizado animado y carga de recursos.
-- `src/export.ts`: imágenes, video, cancelación y descarga.
-- `src/gif.worker.ts`: codificación GIF fuera del hilo de la interfaz.
-- `src/App.tsx`, `src/styles.css`: editor, formulario y diseño adaptable.
-- `ASSETS.md`: procedencia de los recursos.
-- `worker/index.js`: puerta de acceso, identidad verificada por Sites y recursos visuales.
-- `src/AccountMenu.tsx`, `src/session.ts`: cuenta, salida y borradores por cuenta.
-- `scripts/build-worker.mjs`: artefacto ESM con assets integrados.
-- `scripts/auth.test.mjs`: pruebas de acceso, caché e identidad.
-- `.openai/hosting.json`: identidad del Site; usa Worker y ya no declara hosting estático.
+## Documentation
 
-## Validación realizada
+- [Guía en español](README.es.md)
+- [Detailed usage guide (Spanish)](docs/USAGE.es.md)
+- [Architecture and code map](docs/ARCHITECTURE.md)
+- [Deployment, authentication and social previews](docs/DEPLOYMENT.md)
+- [Contributing / Cómo contribuir](CONTRIBUTING.md)
+- [Security reporting](SECURITY.md)
+- [Asset provenance](ASSETS.md) and [third-party notices](THIRD_PARTY_NOTICES.md)
+- [Product scope](PRODUCT.md) and [visual system](DESIGN.md)
 
-Build de producción y TypeScript strict sin errores ni warnings. Interacciones verificadas en navegador: edición en vivo, presets, guardado al recargar, cambio de plantillas, temas y formatos. Capturas revisadas en escritorio y móvil sin desbordamiento horizontal. Descarga PNG y GIF; GIF decodificado con 24 fotogramas, 720 × 720, 2000 ms y cambios reales entre fotogramas. MP4 exportado y reproducido con dimensiones 1080 × 1080. La revisión mecánica actual señala diferencias consultivas entre tokens preexistentes y su documentación; las nuevas superficies de error y acciones destructivas están documentadas en DESIGN.md.
+## Help improve it
 
-### Ampliación de octubre de 2026
+Bug reports, translations, templates, accessibility fixes and export improvements are welcome. [Open an issue](https://github.com/globodex/devday-studio/issues/new/choose) or fork the repository and submit a pull request to `main`.
 
-Verificados en Chromium: crear y editar un evento de 2027, validación del horario, guardar cambios desde el diseño, persistencia al recargar, cancelar/eliminar, importar respaldo con eventos, idiomas ES/EN, fechas localizadas y vistas de 1440 × 1000 y 390 × 844 sin desbordamiento. El GIF de ondas exportado tiene 24 fotogramas, 720 × 720, 2000 ms y bucle infinito. Video MP4 comprobado mediante metadatos del navegador, 1080 × 1080. `npm test` verifica 11 casos: migración, datos de eventos, fechas, continuidad de los seis modos y movimiento con intensidad cero. No se probó en dispositivos físicos ni en Safari.
+Potential contribution areas include browser compatibility, keyboard navigation, more reusable event templates and testing of export edge cases. These are suggestions, not promised features. Read [CONTRIBUTING.md](CONTRIBUTING.md) before making a change.
 
-## Acceso con ChatGPT
+## License
 
-El enlace se puede compartir con cualquier persona que tenga una cuenta de ChatGPT; no existe una lista exclusiva de embajadores. El modo de acceso de Sites admite visitantes por enlace y el Worker exige identidad para servir el editor y `/api/session`. La bienvenida y los recursos visuales son públicos. Las rutas `/signin-with-chatgpt`, `/signout-with-chatgpt` y `/callback` pertenecen a Sites; el proyecto no administra contraseñas, tokens OAuth ni cookies.
-
-En el editor, **Cuenta → Cerrar sesión** guarda de inmediato el borrador y navega a la salida oficial de Sites. Regresa a la bienvenida. Esta acción cierra la sesión del Site, no pretende cerrar la sesión global de ChatGPT. Las respuestas con identidad usan `private, no-store`; al volver a una pestaña o recuperar una página desde el historial se comprueba la sesión.
-
-Verificación local: 19 pruebas automáticas (12 de dominio/persistencia y 7 de acceso), entrada y salida simuladas, bloqueo del editor sin sesión, recuperación del borrador al volver a entrar, y capturas en 1440 × 1000 y 390 × 844. La prueba con identidad simulada no equivale a completar OAuth con una cuenta real de un embajador.
-
-## Vista previa al compartir el enlace
-
-La raíz sirve la bienvenida pública con HTTP 200 a visitantes sin sesión y a rastreadores, sin depender de JavaScript ni redirecciones. El editor sigue requiriendo identidad verificada. `index.html` y ambas bienvenidas incluyen título, descripción, enlaces canónicos, idiomas alternativos, Open Graph y Twitter Card de imagen grande. La bienvenida permite indexación; el HTML del editor autenticado declara `noindex`. El enlace `/?lang=en` permite compartir la versión en inglés; la raíz también respeta el idioma del navegador.
-
-La portada pública `/assets/devday-studio-social-v1.png` mide 1200 × 630 px y pesa aproximadamente 65 KB. Su código fuente está en `design/social-card.html` y `src/social-card.ts`. Para regenerarla, inicia Vite, abre `/design/social-card.html`, espera `canvas[data-ready="true"]` y captura únicamente ese canvas a escala CSS. Al sustituirla, usa un nombre versionado y actualiza las tres cabeceras HTML. Referencia del protocolo: https://ogp.me/ .
-
-`npm test` incluye 22 comprobaciones: las 19 anteriores y tres pruebas de metadatos públicos, idiomas e imagen real. Estas comprueban que GET/HEAD no requieren sesión, los rastreadores reciben el mismo HTML público, las URL son absolutas y el PNG tiene las dimensiones declaradas. Las plataformas pueden conservar vistas previas antiguas; publicar una nueva versión no modifica automáticamente los mensajes ya enviados.
+The original application code and documentation are released under the [MIT License](LICENSE). Bundled third-party fonts, brand artwork and photographs are **not** relicensed by it. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). OpenAI and ChatGPT names and marks remain the property of their respective owners.

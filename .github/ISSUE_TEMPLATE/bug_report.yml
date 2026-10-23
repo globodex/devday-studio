@@ -1,0 +1,33 @@
+name: Bug report / Reportar un error
+description: Describe a reproducible problem in the editor or exports.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "English and Spanish are welcome. For vulnerabilities, use the Security tab's private reporting option."
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Problema
+      description: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps / Pasos para reproducir
+      description: Include template, format, language and export settings when relevant. Use synthetic data.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment / Entorno
+      placeholder: "Chrome 140, Windows 11, live Site or local commit SHA"
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence / Evidencia
+      description: Optional screenshot, console error or minimal example. Remove personal data.

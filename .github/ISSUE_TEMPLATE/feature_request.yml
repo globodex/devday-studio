@@ -1,0 +1,23 @@
+name: Feature request / Proponer una mejora
+description: Suggest a useful improvement for event organizers and contributors.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Need / Necesidad
+      description: What are you trying to accomplish, and what currently gets in the way?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal / Propuesta
+      description: Describe the resulting behavior and who would benefit. English or Spanish is fine.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives / Alternativas
+      description: Optional examples, workarounds or design references.

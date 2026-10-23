@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security / Seguridad
+    url: https://github.com/globodex/devday-studio/security/advisories/new
+    about: Report vulnerabilities privately, without posting sensitive data in issues.

@@ -6,3 +6,10 @@ output/
 *.tar.gz
 *.tar
 *.local
+.env
+.env.*
+!.env.example
+.playwright-mcp/
+*.log
+.DS_Store
+Thumbs.db
