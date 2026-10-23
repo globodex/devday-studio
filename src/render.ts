@@ -1,4 +1,5 @@
 import { assertNever, FORMATS, formatDate, type Design } from './model'
+import { agentPose } from './motion'
 
 const TAU = Math.PI * 2
 const COLORS = { purple: '#9146ff', blue: '#0668ff', orange: '#ff7900', green: '#00b647', white: '#e7e7e1' }
@@ -97,7 +98,7 @@ export function renderDesign(canvas: HTMLCanvasElement, d: Design, progress: num
   const drift=(offset:number)=>d.motion==='float'?Math.sin((phase+offset)*TAU)*18*d.intensity/100:0
   if(d.showBrand){ctx.font='400 53px "OpenAI Wordmark", "OpenAI Sans", sans-serif';ctx.fillStyle=fg;ctx.textBaseline='top';ctx.fillText('OpenAI',p,story?100:53)}
   const dateY=story?104:55
-  ctx.textAlign='right';text(ctx,formatDate(d.date),w-p,dateY,26,fg,400,700);text(ctx,d.city,w-p,dateY+34,25,fg,420);ctx.textAlign='left'
+  ctx.textAlign='right';text(ctx,formatDate(d.date,d.locale),w-p,dateY,26,fg,400,700);text(ctx,d.city,w-p,dateY+34,25,fg,420);ctx.textAlign='left'
   const editorial=d.template==='editorial'
   const titleY=story?305:portrait?200:wide?160:151
   const titleWidth=wide?1130:w-p*2
@@ -117,15 +118,35 @@ export function renderDesign(canvas: HTMLCanvasElement, d: Design, progress: num
   let bodyWidth=wide?1050:story?900:600
   if(editorial) {bodyY=wide?580:story?790:portrait?650:525; heroR*=.9}
   if(story){heroX=742;bodyWidth=950}
+  const animatedAgent=(x:number,y:number,r:number,color:string,face:Face,offset:number,rotation:number)=>{
+    const pose=agentPose(d.motion,phase,offset,d.intensity)
+    ctx.save();ctx.translate(x+pose.x,y+pose.y);ctx.scale(pose.scaleX,pose.scaleY)
+    agent(ctx,0,0,r,color,face,phase+offset,rotation+pose.rotation);ctx.restore()
+  }
+  if(d.showAgents && (d.motion==='waves'||d.motion==='orbit') && d.intensity>0){
+    ctx.save();ctx.beginPath();ctx.rect(heroX-heroR-40,heroY-heroR-65,w,h);ctx.clip()
+    ctx.strokeStyle=d.accent;ctx.lineWidth=4
+    if(d.motion==='waves'){
+      for(let i=0;i<3;i++){
+        const cycle=(phase+i/3)%1
+        ctx.globalAlpha=(1-cycle)*.55*d.intensity/100
+        ctx.beginPath();ctx.arc(heroX,heroY,heroR+16+cycle*115*d.intensity/100,0,TAU);ctx.stroke()
+      }
+    }else{
+      ctx.globalAlpha=.65*d.intensity/100
+      for(let i=0;i<3;i++){const angle=phase*TAU+i*TAU/3;ctx.beginPath();ctx.arc(heroX,heroY,heroR+24,angle,angle+.65);ctx.stroke()}
+    }
+    ctx.restore()
+  }
   if(d.showAgents){
-    agent(ctx,w+3,heroY-178+drift(.1),wide?135:105,COLORS.purple,'round',phase+.12,.13+drift(.2)*.003)
-    agent(ctx,heroX-heroR-7,heroY-heroR+(story?60:-28)+drift(.32),wide?57:44,COLORS.white,'star',phase+.41,-.1)
-    agent(ctx,heroX-heroR+6,heroY+heroR+51+drift(.7),wide?100:76,COLORS.green,'plus',phase+.6,.24)
-    agent(ctx,w-20,heroY+heroR+69+drift(.5),wide?130:105,COLORS.orange,'dash',phase+.76,-.13)
+    animatedAgent(w+3,heroY-178,wide?135:105,COLORS.purple,'round',.12,.13)
+    animatedAgent(heroX-heroR-7,heroY-heroR+(story?60:-28),wide?57:44,COLORS.white,'star',.41,-.1)
+    animatedAgent(heroX-heroR+6,heroY+heroR+51,wide?100:76,COLORS.green,'plus',.6,.24)
+    animatedAgent(w-20,heroY+heroR+69,wide?130:105,COLORS.orange,'dash',.76,-.13)
     if(!editorial && d.title.length<10)text(ctx,'?',wide?w-210:w-112,titleY+65+drift(.4),56,COLORS.blue)
   }
   if(assets.photo) photo(ctx,assets.photo,d,heroX,heroY,heroR)
-  else if(d.showAgents)agent(ctx,heroX,heroY+drift(0),heroR,editorial?COLORS.orange:COLORS.blue,editorial?'dash':'chevron',phase+.28,-.08)
+  else if(d.showAgents)animatedAgent(heroX,heroY,heroR,editorial?COLORS.orange:COLORS.blue,editorial?'dash':'chevron',.28,-.08)
   const badge=d.template==='speaker'?'SPEAKER':d.badge
   if(badge){
     ctx.font='700 23px "OpenAI Sans"';const badgeWidth=Math.min(ctx.measureText(badge).width+40,bodyWidth)
@@ -136,14 +157,15 @@ export function renderDesign(canvas: HTMLCanvasElement, d: Design, progress: num
   const name=d.template==='speaker'?d.speaker:d.city
   const nameWidth=story?950:wide?1100:565
   const nameSize=text(ctx,name,p,bodyY+140,story?82:wide?79:63,fg,nameWidth,700)
-  lines(ctx,d.template==='speaker'?d.role:'Aprende. Construye. Conecta.',p,bodyY+153+nameSize,wide?29:26,muted,story?880:wide?900:540,2)
+  lines(ctx,d.template==='speaker'?d.role:d.locale==='en'?'Learn. Build. Connect.':'Aprende. Construye. Conecta.',p,bodyY+153+nameSize,wide?29:26,muted,story?880:wide?900:540,2)
   const footerHeight=story?212:portrait?156:126,footerTop=h-footerHeight
   if(d.showFooter){
     ctx.fillStyle=dark?'#25271f':'#e9ece4';ctx.fillRect(0,footerTop,w,footerHeight)
     const col2=wide?480:story?460:360, rightWidth=wide?500:310
     lines(ctx,'DevDay Exchange Community Event',p,footerTop+31,wide?25:23,fg,wide?310:260,2,700)
     const venueWidth=wide?650:story?550:310
-    lines(ctx,d.venue,col2,footerTop+30,wide?24:21,fg,venueWidth,2)
+    const venue=d.locale==='en'&&d.venue==='Ubicación al registrarte'?'Location after registration':d.venue
+    lines(ctx,venue,col2,footerTop+30,wide?24:21,fg,venueWidth,2)
     text(ctx,`${d.startTime}–${d.endTime} · UTC−5`,col2,footerTop+(d.venue.length>27?86:62),wide?23:20,fg,venueWidth)
     if(!story){ctx.textAlign='right';text(ctx,d.organizer,w-p,footerTop+43,wide?28:21,fg,rightWidth,700);ctx.textAlign='left'}
     else text(ctx,d.organizer,p,footerTop+131,26,fg,900,700)

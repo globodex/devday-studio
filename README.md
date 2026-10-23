@@ -12,6 +12,7 @@ npm run dev
 ```
 
 ```powershell
+npm test
 npm run build
 npm run preview
 ```
@@ -20,12 +21,13 @@ npm run preview
 
 ## Uso
 
-1. Selecciona un evento precargado y modifica título, ciudad, fecha, horario, lugar y registro.
+1. En **Tus eventos** selecciona uno existente, usa **Nuevo evento** o **Editar evento**. Guarda nombre, ciudad, fecha, horario, lugar, enlace y notas internas. Puedes eliminarlo con confirmación; la pieza actual se conserva. Si cambias datos directamente en el diseño, usa **Guardar datos en el evento** para actualizar la lista.
 2. En Diseño elige Community, Speaker o Editorial, el fondo claro/oscuro y el color de acento.
 3. Añade una foto JPG, PNG o WebP (hasta 20 MB). Ajusta zoom y posición dentro del recorte circular.
 4. Selecciona Cuadrado (1080 × 1080), Retrato (1080 × 1350), Historia (1080 × 1920) u Horizontal (1920 × 1080).
-5. En Animación elige flotación, expresiones o composición estática. Ajusta duración entre 2 y 12 segundos. Pausa o mueve la línea de tiempo para elegir el fotograma de una imagen fija.
-6. Exporta la pieza. Desde el menú de tres puntos puedes guardar o abrir un archivo JSON editable y empezar de nuevo.
+5. En Animación elige órbita, rebote, ondas, flotación, expresiones o composición estática. Ajusta duración entre 2 y 12 segundos. Pausa o mueve la línea de tiempo para elegir el fotograma de una imagen fija.
+6. Exporta la pieza. Desde el menú de tres puntos puedes guardar o abrir un archivo JSON editable con **el diseño y toda la lista de eventos**, o empezar de nuevo sin borrar tus eventos. Los archivos anteriores que solo incluyen el diseño siguen funcionando.
+7. Cambia la interfaz entre español e inglés con **ES/EN**, arriba a la derecha. En **Diseño → Idioma de la promoción** elige el idioma de fechas y textos automáticos de la pieza. Los textos que escribiste se conservan; puedes traducirlos en Contenido. La primera visita toma el idioma del navegador y después recuerda tu elección.
 
 ## Exportaciones
 
@@ -38,7 +40,7 @@ La misma función Canvas dibuja la vista previa y todos los fotogramas exportado
 
 ## Datos y privacidad
 
-El contenido se guarda con debounce en `localStorage` bajo `devday-studio:design:v1`. Las fotos se redimensionan en el navegador a un máximo de 1600 px y se incorporan al borrador. No se envían a un servidor. El borrador es específico del navegador y origen; no se sincroniza entre dispositivos. Si no hay espacio, la interfaz avisa y permite guardar un archivo editable.
+El contenido se guarda con debounce de 450 ms en `localStorage`: `devday-studio:design:v1` para el borrador, `devday-studio:events:v1` para los eventos y `devday-studio:locale:v1` para el idioma. Los eventos validan fecha real, horario de fin posterior al inicio y enlaces HTTP/HTTPS. Las horas siguen siendo de Ecuador, UTC−5. Las fotos se redimensionan en el navegador a un máximo de 1600 px y se incorporan al borrador. No se envían a un servidor. El borrador es específico del navegador y origen; no se sincroniza entre dispositivos. Si no hay espacio, la interfaz avisa y permite guardar un archivo editable.
 
 Los archivos importados se validan y los valores numéricos se acotan. Los enlaces externos solo admiten HTTP/HTTPS. Se respetan las preferencias de movimiento reducido para la reproducción inicial. No hay telemetría.
 
@@ -59,6 +61,10 @@ Manta tiene datos contradictorios: la descripción menciona 24 de octubre a las 
 
 - `src/model.ts`: tipos, formatos, presets y validación del borrador.
 - `src/render.ts`: composición, tipografía, recorte fotográfico y agentes.
+- `src/motion.ts`: órbitas, rebotes y ondas con ciclos continuos y control de intensidad.
+- `src/EventEditor.tsx`: formulario de alta/edición de eventos; conserva cambios al alternar pestañas.
+- `src/i18n.ts`: diccionario tipado ES/EN, contexto y preferencia de idioma.
+- `scripts/check-model.mjs`: 11 pruebas del dominio, migración y continuidad de animaciones.
 - `src/Preview.tsx`: renderizado animado y carga de recursos.
 - `src/export.ts`: imágenes, video, cancelación y descarga.
 - `src/gif.worker.ts`: codificación GIF fuera del hilo de la interfaz.
@@ -68,4 +74,8 @@ Manta tiene datos contradictorios: la descripción menciona 24 de octubre a las 
 
 ## Validación realizada
 
-Build de producción y TypeScript strict sin errores ni warnings. Interacciones verificadas en navegador: edición en vivo, presets, guardado al recargar, cambio de plantillas, temas y formatos. Capturas revisadas en escritorio y móvil sin desbordamiento horizontal. Descarga PNG y GIF; GIF decodificado con 24 fotogramas, 720 × 720, 2000 ms y cambios reales entre fotogramas. MP4 exportado y reproducido con dimensiones 1080 × 1080. El validador mecánico de diseño no reportó hallazgos.
+Build de producción y TypeScript strict sin errores ni warnings. Interacciones verificadas en navegador: edición en vivo, presets, guardado al recargar, cambio de plantillas, temas y formatos. Capturas revisadas en escritorio y móvil sin desbordamiento horizontal. Descarga PNG y GIF; GIF decodificado con 24 fotogramas, 720 × 720, 2000 ms y cambios reales entre fotogramas. MP4 exportado y reproducido con dimensiones 1080 × 1080. La revisión mecánica actual señala diferencias consultivas entre tokens preexistentes y su documentación; las nuevas superficies de error y acciones destructivas están documentadas en DESIGN.md.
+
+### Ampliación de octubre de 2026
+
+Verificados en Chromium: crear y editar un evento de 2027, validación del horario, guardar cambios desde el diseño, persistencia al recargar, cancelar/eliminar, importar respaldo con eventos, idiomas ES/EN, fechas localizadas y vistas de 1440 × 1000 y 390 × 844 sin desbordamiento. El GIF de ondas exportado tiene 24 fotogramas, 720 × 720, 2000 ms y bucle infinito. Video MP4 comprobado mediante metadatos del navegador, 1080 × 1080. `npm test` verifica 11 casos: migración, datos de eventos, fechas, continuidad de los seis modos y movimiento con intensidad cero. No se probó en dispositivos físicos ni en Safari.

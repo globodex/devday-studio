@@ -21,3 +21,6 @@ Seguir los assets digitales DDE y las referencias de Daniela Hueso. OpenAI Sans,
 
 ## Evidence on Hand
 Assets digitales locales, referencias PNG, 28 diapositivas del recap, y cuatro eventos de Luma consultados el 21 de octubre de 2026. La fecha principal de Manta difiere de la descripción y necesita revisión del organizador.
+
+## Ampliación del editor
+Lista de eventos con alta, edición y eliminación local; respaldos JSON del diseño y eventos. Interfaz bilingüe ES/EN y lenguaje de la promoción independiente. Animaciones órbita, rebote y ondas, además de los modos originales. Los eventos conservan horarios de Ecuador (UTC−5).

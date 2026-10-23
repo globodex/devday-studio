@@ -2,6 +2,9 @@
 name: DevDay Studio
 description: Sistema visual del editor de piezas digitales DevDay Community.
 colors:
+  error-surface: "#fff1e9"
+  destructive: "#873d1e"
+  destructive-hover: "#6f3017"
   action: "#16633d"
   action-hover: "#104d2f"
   app-background: "#f8f9f7"
@@ -256,7 +259,7 @@ La insignia del lienzo mide 48px de alto y utiliza el acento elegido, texto badg
 
 ### Expressive agents
 
-Cinco expresiones —redonda, cruz, chevrón, raya y estrella— se dibujan en círculos con ojos proporcionales al radio. El parpadeo depende de la fase del ciclo; el modo de flotación añade desplazamiento sinusoidal proporcional a la intensidad. El modo sin movimiento fija la fase en .25.
+Cinco expresiones —redonda, cruz, chevrón, raya y estrella— se dibujan en círculos con ojos proporcionales al radio. El parpadeo depende de la fase del ciclo; el modo de flotación añade desplazamiento sinusoidal proporcional a la intensidad. El modo sin movimiento fija la fase en .25. Órbita añade desplazamientos elípticos locales y arcos alrededor del protagonista; Rebote coordina saltos con compresión y giro; Ondas expande anillos de color. La intensidad regula desplazamiento, escala y opacidad. Todos comparten ciclos periódicos en motion.ts para que vista previa, GIF y video coincidan. La vista previa suspende sus fotogramas cuando la pestaña está oculta.
 
 La demostración de interfaz usa ciclos de 4s ease-in-out. La preferencia de movimiento reducido desactiva animaciones y transiciones CSS e inicia la reproducción pausada. La reproducción sigue siendo una acción explícita disponible.
 
@@ -277,3 +280,9 @@ La demostración de interfaz usa ciclos de 4s ease-in-out. La preferencia de mov
 - Don't atribuir el ajuste de contraste editorial a todos los elementos del lienzo.
 - Don't añadir navegación ficticia ni controles que no tengan una acción.
 - Don't activar automáticamente la reproducción cuando el navegador solicita movimiento reducido.
+
+## Eventos e idiomas
+
+La gestión de eventos vive al principio de Contenido: selector, acción Nuevo evento y controles de editar/eliminar. El formulario se expande en el inspector, sin interrumpir el lienzo. Conserva el borrador al cambiar de pestaña. Eliminar requiere confirmación inline y conserva la pieza. Los errores usan fondo #fff1e9 y texto #873d1e. El botón destructivo usa ese mismo tono.
+
+El selector ES/EN está en cabecera, con icono Languages en escritorio y abreviatura compacta en móvil. El idioma de la promoción se elige por separado en Diseño. Las etiquetas, ayudas, estados, errores y accesibilidad usan el diccionario tipado; los valores introducidos por la persona no se traducen automáticamente.
