@@ -10,13 +10,15 @@ const request = (path, headers = {}, method = 'GET') => new Request(`https://stu
 test('anonymous visitors cannot load the editor or session', async () => {
   for (const path of ['/', '/index.html']) {
     const response = await worker.fetch(request(path))
-    assert.equal(response.status, 303); assert.equal(response.headers.get('location'), '/welcome')
+    assert.equal(response.status, 200)
+    assert.equal(await response.text(), 'CONTINUAR')
     assert.match(response.headers.get('cache-control'), /no-store/)
   }
   assert.equal((await worker.fetch(request('/api/session'))).status, 401)
 })
 test('partial identity does not grant access', async () => {
-  assert.equal((await worker.fetch(request('/', { 'oai-authenticated-user-id': 'visitor-a' }))).status, 303)
+  const response = await worker.fetch(request('/', { 'oai-authenticated-user-id': 'visitor-a' }))
+  assert.equal(await response.text(), 'CONTINUAR')
 })
 test('any authenticated visitor can enter and gets an uncached identity', async () => {
   const response = await worker.fetch(request('/', signed))

@@ -91,3 +91,11 @@ El enlace se puede compartir con cualquier persona que tenga una cuenta de ChatG
 En el editor, **Cuenta → Cerrar sesión** guarda de inmediato el borrador y navega a la salida oficial de Sites. Regresa a la bienvenida. Esta acción cierra la sesión del Site, no pretende cerrar la sesión global de ChatGPT. Las respuestas con identidad usan `private, no-store`; al volver a una pestaña o recuperar una página desde el historial se comprueba la sesión.
 
 Verificación local: 19 pruebas automáticas (12 de dominio/persistencia y 7 de acceso), entrada y salida simuladas, bloqueo del editor sin sesión, recuperación del borrador al volver a entrar, y capturas en 1440 × 1000 y 390 × 844. La prueba con identidad simulada no equivale a completar OAuth con una cuenta real de un embajador.
+
+## Vista previa al compartir el enlace
+
+La raíz sirve la bienvenida pública con HTTP 200 a visitantes sin sesión y a rastreadores, sin depender de JavaScript ni redirecciones. El editor sigue requiriendo identidad verificada. `index.html` y ambas bienvenidas incluyen título, descripción, enlaces canónicos, idiomas alternativos, Open Graph y Twitter Card de imagen grande. La bienvenida permite indexación; el HTML del editor autenticado declara `noindex`. El enlace `/?lang=en` permite compartir la versión en inglés; la raíz también respeta el idioma del navegador.
+
+La portada pública `/assets/devday-studio-social-v1.png` mide 1200 × 630 px y pesa aproximadamente 65 KB. Su código fuente está en `design/social-card.html` y `src/social-card.ts`. Para regenerarla, inicia Vite, abre `/design/social-card.html`, espera `canvas[data-ready="true"]` y captura únicamente ese canvas a escala CSS. Al sustituirla, usa un nombre versionado y actualiza las tres cabeceras HTML. Referencia del protocolo: https://ogp.me/ .
+
+`npm test` incluye 22 comprobaciones: las 19 anteriores y tres pruebas de metadatos públicos, idiomas e imagen real. Estas comprueban que GET/HEAD no requieren sesión, los rastreadores reciben el mismo HTML público, las URL son absolutas y el PNG tiene las dimensiones declaradas. Las plataformas pueden conservar vistas previas antiguas; publicar una nueva versión no modifica automáticamente los mensajes ya enviados.

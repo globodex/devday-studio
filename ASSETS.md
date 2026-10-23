@@ -7,5 +7,6 @@
 - `public/assets/host.jpg`: avatar público del anfitrión Israel J. Gomez mostrado en los eventos Luma proporcionados. Fuente: https://images.lumacdn.com/avatars/ni/5fe9801b-58ef-474b-908e-4de62afbfc0c.jpg . Es la foto inicial opcional de la plantilla Speaker; se puede reemplazar o quitar.
 - Agentes animados: geometría Canvas original basada en los círculos, colores y expresiones del material digital del usuario. No se han recortado las capturas de Daniela Hueso para reutilizar su imagen.
 - `public/favicon.svg`: geometría original para identificar el editor.
+- `public/assets/devday-studio-social-v1.png`: portada social original de 1200 × 630 px, renderizada desde `design/social-card.html` y `src/social-card.ts` con las fuentes y la función Canvas de agentes del proyecto. Fondo oscuro y composición propia; no contiene datos ni fotografías de usuarios. La versión en el nombre permite sustituir la portada sin reutilizar la caché de la imagen anterior.
 
 Se revisó el contenido de las 28 diapositivas de `[Recap] OpenAI DevDay 2026 — Community Edition.pptx` como contexto temático. No se publican las diapositivas ni afirmaciones comerciales extraídas de ellas.

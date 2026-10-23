@@ -14,6 +14,15 @@ export function getIdentity(request) {
 const privateHeaders = { 'Cache-Control': 'private, no-store', Vary: 'Cookie, Authorization', 'X-Content-Type-Options': 'nosniff' }
 const redirect = (path) => new Response(null, { status: 303, headers: { ...privateHeaders, Location: path } })
 
+function welcomeResponse(request, assets) {
+  const url = new URL(request.url)
+  const language = url.searchParams.get('lang') || request.headers.get('accept-language') || 'es'
+  const page = assets[language.startsWith('en') ? '/welcome-en.html' : '/welcome-es.html']
+  return new Response(request.method === 'HEAD' ? null : decodeAsset(page), {
+    headers: { ...privateHeaders, Vary: 'Cookie, Authorization, Accept-Language', 'Content-Type': 'text/html; charset=utf-8' },
+  })
+}
+
 export function createWorker(assets) {
   return {
     async fetch(request) {
@@ -25,13 +34,12 @@ export function createWorker(assets) {
       if (['/signin-with-chatgpt', '/signout-with-chatgpt', '/callback'].includes(url.pathname)) return new Response('Authentication is handled by Sites.', { status: 404, headers: privateHeaders })
       if (url.pathname === '/welcome') {
         if (user && !url.searchParams.has('signed_out')) return redirect('/')
-        const language = url.searchParams.get('lang') || request.headers.get('accept-language') || 'es'
-        const en = language.startsWith('en')
-        const page = assets[en ? '/welcome-en.html' : '/welcome-es.html']
-        return new Response(request.method === 'HEAD' ? null : decodeAsset(page), { headers: { ...privateHeaders, 'Content-Type': 'text/html; charset=utf-8' } })
+        return welcomeResponse(request, assets)
       }
       if (url.pathname === '/' || url.pathname === '/index.html') {
-        if (!user) return redirect('/welcome')
+        // The same public landing HTML goes to people and link crawlers, without
+        // JavaScript or redirects. Only verified visitors receive the editor.
+        if (!user) return welcomeResponse(request, assets)
         const html = new TextDecoder().decode(decodeAsset(assets['/index.html']))
         const identity = JSON.stringify(user).replaceAll('<', '\\u003c')
         const body = html.replace('</head>', `<script id="devday-session" type="application/json">${identity}</script></head>`)
