@@ -286,3 +286,9 @@ La demostración de interfaz usa ciclos de 4s ease-in-out. La preferencia de mov
 La gestión de eventos vive al principio de Contenido: selector, acción Nuevo evento y controles de editar/eliminar. El formulario se expande en el inspector, sin interrumpir el lienzo. Conserva el borrador al cambiar de pestaña. Eliminar requiere confirmación inline y conserva la pieza. Los errores usan fondo #fff1e9 y texto #873d1e. El botón destructivo usa ese mismo tono.
 
 El selector ES/EN está en cabecera, con icono Languages en escritorio y abreviatura compacta en móvil. El idioma de la promoción se elige por separado en Diseño. Las etiquetas, ayudas, estados, errores y accesibilidad usan el diccionario tipado; los valores introducidos por la persona no se traducen automáticamente.
+
+## Entrada y cuenta
+
+La bienvenida conserva OpenAI Sans local, el verde de acción y los assets de agentes. En escritorio usa texto a la izquierda y una muestra de la identidad DevDay a la derecha; en móvil apila el contenido con Continuar con ChatGPT antes de la imagen. Permite ES/EN sin sesión.
+
+El menú Cuenta se ubica antes de Exportar, con nombre y correo verificados y la acción Cerrar sesión. En móvil conserva el icono de persona y un panel anclado a la derecha del viewport. Usa los controles, tipografía y contraste existentes. Las rutas de entrada y salida navegan a nivel superior para funcionar desde vistas embebidas.

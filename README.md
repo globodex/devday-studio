@@ -14,10 +14,10 @@ npm run dev
 ```powershell
 npm test
 npm run build
-npm run preview
+npm run preview:auth -- --mock-auth
 ```
 
-`build` ejecuta el compilador TypeScript y genera `dist/`. No necesita variables de entorno, API keys, Supabase ni backend.
+`build` ejecuta TypeScript y Vite, e integra los recursos en `dist/server/index.js`, un Worker ESM de Sites. La autenticación está gestionada por Sites; no necesita API keys, Supabase ni una base de datos. `npm run dev` sirve el editor sin sesión para desarrollo. `preview:auth -- --mock-auth` prueba el Worker compilado con identidad simulada únicamente en loopback. El simulador no forma parte del artefacto publicado.
 
 ## Uso
 
@@ -40,7 +40,7 @@ La misma función Canvas dibuja la vista previa y todos los fotogramas exportado
 
 ## Datos y privacidad
 
-El contenido se guarda con debounce de 450 ms en `localStorage`: `devday-studio:design:v1` para el borrador, `devday-studio:events:v1` para los eventos y `devday-studio:locale:v1` para el idioma. Los eventos validan fecha real, horario de fin posterior al inicio y enlaces HTTP/HTTPS. Las horas siguen siendo de Ecuador, UTC−5. Las fotos se redimensionan en el navegador a un máximo de 1600 px y se incorporan al borrador. No se envían a un servidor. El borrador es específico del navegador y origen; no se sincroniza entre dispositivos. Si no hay espacio, la interfaz avisa y permite guardar un archivo editable.
+El contenido se guarda con debounce de 450 ms en `localStorage`: las claves `devday-studio:design:v1` y `devday-studio:events:v1` llevan el identificador de la cuenta en el Site; `devday-studio:locale:v1` conserva el idioma del navegador. El borrador anterior se migra una sola vez a la primera cuenta que inicia sesión en ese navegador. Otras cuentas comienzan con sus propias claves. Esto no es almacenamiento en la nube ni cifrado del almacenamiento local. Los eventos validan fecha real, horario de fin posterior al inicio y enlaces HTTP/HTTPS. Las horas siguen siendo de Ecuador, UTC−5. Las fotos se redimensionan en el navegador a un máximo de 1600 px y se incorporan al borrador. No se envían a un servidor. El borrador es específico del navegador y origen; no se sincroniza entre dispositivos. Si no hay espacio, la interfaz avisa y permite guardar un archivo editable.
 
 Los archivos importados se validan y los valores numéricos se acotan. Los enlaces externos solo admiten HTTP/HTTPS. Se respetan las preferencias de movimiento reducido para la reproducción inicial. No hay telemetría.
 
@@ -70,7 +70,11 @@ Manta tiene datos contradictorios: la descripción menciona 24 de octubre a las 
 - `src/gif.worker.ts`: codificación GIF fuera del hilo de la interfaz.
 - `src/App.tsx`, `src/styles.css`: editor, formulario y diseño adaptable.
 - `ASSETS.md`: procedencia de los recursos.
-- `.openai/hosting.json`: identidad y configuración del Site privado.
+- `worker/index.js`: puerta de acceso, identidad verificada por Sites y recursos visuales.
+- `src/AccountMenu.tsx`, `src/session.ts`: cuenta, salida y borradores por cuenta.
+- `scripts/build-worker.mjs`: artefacto ESM con assets integrados.
+- `scripts/auth.test.mjs`: pruebas de acceso, caché e identidad.
+- `.openai/hosting.json`: identidad del Site; usa Worker y ya no declara hosting estático.
 
 ## Validación realizada
 
@@ -79,3 +83,11 @@ Build de producción y TypeScript strict sin errores ni warnings. Interacciones 
 ### Ampliación de octubre de 2026
 
 Verificados en Chromium: crear y editar un evento de 2027, validación del horario, guardar cambios desde el diseño, persistencia al recargar, cancelar/eliminar, importar respaldo con eventos, idiomas ES/EN, fechas localizadas y vistas de 1440 × 1000 y 390 × 844 sin desbordamiento. El GIF de ondas exportado tiene 24 fotogramas, 720 × 720, 2000 ms y bucle infinito. Video MP4 comprobado mediante metadatos del navegador, 1080 × 1080. `npm test` verifica 11 casos: migración, datos de eventos, fechas, continuidad de los seis modos y movimiento con intensidad cero. No se probó en dispositivos físicos ni en Safari.
+
+## Acceso con ChatGPT
+
+El enlace se puede compartir con cualquier persona que tenga una cuenta de ChatGPT; no existe una lista exclusiva de embajadores. El modo de acceso de Sites admite visitantes por enlace y el Worker exige identidad para servir el editor y `/api/session`. La bienvenida y los recursos visuales son públicos. Las rutas `/signin-with-chatgpt`, `/signout-with-chatgpt` y `/callback` pertenecen a Sites; el proyecto no administra contraseñas, tokens OAuth ni cookies.
+
+En el editor, **Cuenta → Cerrar sesión** guarda de inmediato el borrador y navega a la salida oficial de Sites. Regresa a la bienvenida. Esta acción cierra la sesión del Site, no pretende cerrar la sesión global de ChatGPT. Las respuestas con identidad usan `private, no-store`; al volver a una pestaña o recuperar una página desde el historial se comprueba la sesión.
+
+Verificación local: 19 pruebas automáticas (12 de dominio/persistencia y 7 de acceso), entrada y salida simuladas, bloqueo del editor sin sesión, recuperación del borrador al volver a entrar, y capturas en 1440 × 1000 y 390 × 844. La prueba con identidad simulada no equivale a completar OAuth con una cuenta real de un embajador.

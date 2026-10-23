@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from 'react'
 import { ArrowDownToLine, ArrowUpRight, Check, CheckCheck, ChevronDown, CircleHelp, FileDown, FolderOpen, ImagePlus, Info, LoaderCircle, Maximize2, Monitor, MoreHorizontal, Plus, Pencil, Languages, Palette, Pause, Play, RotateCcw, SlidersHorizontal, Smartphone, Sparkles, Square, Trash2, Type, Upload, WandSparkles, X } from 'lucide-react'
-import { ACCENTS, DEFAULT_DESIGN, EVENTS, EVENTS_KEY, FORMATS, eventDetails, formatDate, loadEvents, parseEvents, validateEvent, STORAGE_KEY, loadDesign, parseDesign, safeUrl, type Design, type ExportKind, type Format, type Template, type EventPreset } from './model'
+import { ACCENTS, DEFAULT_DESIGN, EVENTS, FORMATS, eventDetails, formatDate, loadEvents, parseEvents, validateEvent, loadDesign, parseDesign, safeUrl, type Design, type ExportKind, type Format, type Template, type EventPreset } from './model'
 import { download, exportDesign, supportedVideoType } from './export'
 import Preview from './Preview'
 import EventEditor from './EventEditor'
+import AccountMenu from './AccountMenu'
+import { readSession, storageForSession } from './session'
 import { I18nContext, LOCALE_KEY, loadLocale, translate, useI18n, type Locale, type Translate } from './i18n'
 
 type Tab='content'|'design'|'motion'
@@ -32,11 +34,13 @@ export default function App(){
 
 function Studio({onLocale}:{onLocale:(locale:Locale)=>void}){
   const {locale,t}=useI18n()
-  const [events,setEvents]=useState<EventPreset[]>(loadEvents)
+  const [session]=useState(readSession)
+  const [storage]=useState(()=>storageForSession(session))
+  const [events,setEvents]=useState<EventPreset[]>(()=>loadEvents(storage.events))
   const [eventDraft,setEventDraft]=useState<{initial:EventPreset;isNew:boolean}|null>(null)
   const [deleteConfirm,setDeleteConfirm]=useState(false)
 
-  const [design,setDesign]=useState<Design>(loadDesign)
+  const [design,setDesign]=useState<Design>(()=>loadDesign(storage.design))
   const [tab,setTab]=useState<Tab>('content')
   const [playing,setPlaying]=useState(()=>!window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   const [position,setPosition]=useState(0)
@@ -58,10 +62,27 @@ function Studio({onLocale}:{onLocale:(locale:Locale)=>void}){
   const size=FORMATS[design.format],preset=events.find(event=>event.id===design.presetId),videoType=supportedVideoType()
 
   function update<K extends keyof Design>(key:K,value:Design[K]){setDesign(previous=>({...previous,[key]:value}));setSaved(false)}
-  useEffect(()=>{setSaved(false);const timer=setTimeout(()=>{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(design));localStorage.setItem(EVENTS_KEY,JSON.stringify(events));setSaved(true);setStorageError(false)}catch{setStorageError(true)}},450);return()=>clearTimeout(timer)},[design,events])
+  function persistDraft(){try{localStorage.setItem(storage.design,JSON.stringify(design));localStorage.setItem(storage.events,JSON.stringify(events));setSaved(true);setStorageError(false)}catch{setStorageError(true)}}
+  useEffect(()=>{setSaved(false);const timer=setTimeout(persistDraft,450);return()=>clearTimeout(timer)},[design,events,storage])
   useEffect(()=>{if(!notice)return;const timer=setTimeout(()=>setNotice(''),6000);return()=>clearTimeout(timer)},[notice])
   useEffect(()=>{const dialog=exportDialog.current;if(exportOpen&&!dialog?.open)dialog?.showModal();else if(!exportOpen&&dialog?.open)dialog?.close()},[exportOpen])
   useEffect(()=>()=>abortRef.current?.abort(),[])
+  useEffect(()=>{
+    if(!session)return
+    const checkSession=async()=>{
+      try{
+        const response=await fetch('/api/session',{cache:'no-store'})
+        if(response.status===401){window.location.replace('/welcome');return}
+        if(!response.ok)return
+        const result:unknown=await response.json()
+        if(result&&typeof result==='object'&&'user' in result){const user=result.user;if(!user||typeof user!=='object'||!('id' in user)||user.id!==session.id)window.location.replace('/welcome')}
+      }catch{/* Keep the draft open when the network is temporarily unavailable. */}
+    }
+    const shown=(event:PageTransitionEvent)=>{if(event.persisted)void checkSession()}
+    const visible=()=>{if(!document.hidden)void checkSession()}
+    window.addEventListener('pageshow',shown);document.addEventListener('visibilitychange',visible)
+    return()=>{window.removeEventListener('pageshow',shown);document.removeEventListener('visibilitychange',visible)}
+  },[session])
   function applyPreset(id:string){const event=events.find(item=>item.id===id);if(event){setDesign(previous=>({...previous,...eventDetails(event)}));setDeleteConfirm(false);setNotice(t('Datos de {city} cargados. Puedes editarlos.',{city:event.city}))}}
   function saveEvent(event:EventPreset){setEvents(previous=>previous.some(item=>item.id===event.id)?previous.map(item=>item.id===event.id?event:item):[...previous,event]);setDesign(previous=>({...previous,...eventDetails(event)}));setEventDraft(null);setNotice(t('Evento guardado.'))}
   function newEvent(){setDeleteConfirm(false);setEventDraft({isNew:true,initial:{id:crypto.randomUUID(),name:'',city:'',date:design.date,startTime:design.startTime,endTime:design.endTime,venue:'',url:''}})}
@@ -84,6 +105,7 @@ function Studio({onLocale}:{onLocale:(locale:Locale)=>void}){
       <a className="brand" href="/" aria-label={t('DevDay Studio, inicio')}><span className="brand-mark" aria-hidden="true"><i/><i/></span><span>DevDay <strong>Studio</strong></span><span className="brand-edition">Community edition</span></a>
       <div className="header-actions"><label className="language-picker"><Languages size={16}/><select aria-label={t('Idioma')} value={locale} onChange={e=>onLocale(e.target.value==='en'?'en':'es')}><option value="es">ES</option><option value="en">EN</option></select></label><span className={`save-state ${storageError?'warning':''}`}>{storageError?<Info size={14}/>:saved?<CheckCheck size={15}/>:<LoaderCircle size={14}/>}<span>{storageError?t('Sin guardar'):saved?t('Guardado en este navegador'):t('Guardando…')}</span></span>
         <div className="project-menu"><button className="icon-button" aria-label={t('Opciones del diseño')} aria-expanded={menu} onClick={()=>setMenu(!menu)}><MoreHorizontal size={21}/></button>{menu&&<><button className="menu-dismiss" aria-label={t('Cerrar opciones')} onClick={()=>setMenu(false)}/><div className="dropdown-menu"><button onClick={()=>{download(new Blob([JSON.stringify({version:2,design,events},null,2)],{type:'application/json'}),'devday-studio.json');setMenu(false)}}><FileDown size={16}/>{t('Guardar archivo editable')}</button><button onClick={()=>{importRef.current?.click();setMenu(false)}}><FolderOpen size={16}/>{t('Abrir archivo editable')}</button><button onClick={()=>{setResetConfirm(true);setMenu(false)}}><RotateCcw size={16}/>{t('Empezar de nuevo')}</button></div></>}</div>
+        <AccountMenu user={session} beforeSignOut={persistDraft}/>
         <button className="primary-button export-top" onClick={()=>setExportOpen(true)}><ArrowDownToLine size={16}/><span>{t('Exportar')}</span><ChevronDown size={14}/></button>
       </div>
     </header>

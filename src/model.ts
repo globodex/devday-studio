@@ -112,8 +112,8 @@ export function parseDesign(raw: unknown): Design {
 }
 
 export const STORAGE_KEY = 'devday-studio:design:v1'
-export function loadDesign(): Design {
-  try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? parseDesign(JSON.parse(raw)) : { ...DEFAULT_DESIGN } } catch { return { ...DEFAULT_DESIGN } }
+export function loadDesign(key = STORAGE_KEY): Design {
+  try { const raw = localStorage.getItem(key); return raw ? parseDesign(JSON.parse(raw)) : { ...DEFAULT_DESIGN } } catch { return { ...DEFAULT_DESIGN } }
 }
 
 export const EVENTS_KEY = 'devday-studio:events:v1'
@@ -146,8 +146,8 @@ export function parseEvents(raw: unknown): EventPreset[] {
     return event
   })
 }
-export function loadEvents(): EventPreset[] {
-  try { const raw = localStorage.getItem(EVENTS_KEY); return raw ? parseEvents(JSON.parse(raw)) : EVENTS.map(event => ({ ...event })) } catch { return EVENTS.map(event => ({ ...event })) }
+export function loadEvents(key = EVENTS_KEY): EventPreset[] {
+  try { const raw = localStorage.getItem(key); return raw ? parseEvents(JSON.parse(raw)) : EVENTS.map(event => ({ ...event })) } catch { return EVENTS.map(event => ({ ...event })) }
 }
 export function eventDetails(event: EventPreset): Pick<Design, 'presetId' | 'city' | 'date' | 'startTime' | 'endTime' | 'venue' | 'url'> {
   return { presetId: event.id, city: event.city, date: event.date, startTime: event.startTime, endTime: event.endTime, venue: event.venue, url: event.url }

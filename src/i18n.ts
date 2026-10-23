@@ -2,6 +2,9 @@ import { createContext, useContext } from 'react'
 
 export type Locale = 'es' | 'en'
 const english = {
+  'Cuenta': 'Account', 'Cerrar sesión': 'Sign out', 'Vista local': 'Local preview',
+  'La sesión de ChatGPT está disponible en el sitio publicado.': 'ChatGPT sign-in is available on the published site.',
+  'Tus diseños y eventos se guardan para esta cuenta en este navegador.': 'Your designs and events are saved for this account in this browser.',
   'Idioma': 'Language', 'Idioma de la promoción': 'Promotion language',
   'Traduce fechas y textos automáticos. Conserva lo que escribiste.': 'Translates dates and automatic text. Keeps your own copy.',
   'DevDay Studio, inicio': 'DevDay Studio, home', 'Sin guardar': 'Not saved', 'Guardado en este navegador': 'Saved in this browser', 'Guardando…': 'Saving…',
